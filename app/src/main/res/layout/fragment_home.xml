@@ -1,0 +1,29 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="sam.com.noteapp.fragments.HomeFragment">
+
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/all_notes_list"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/create_note_view"
+        android:layout_alignParentTop="true" />
+
+    <LinearLayout
+        android:id="@+id/create_note_view"
+        android:layout_width="match_parent"
+        android:layout_height="70dp"
+        android:layout_alignParentBottom="true"
+        android:background="@drawable/shape">
+
+        <TextView
+            android:id="@+id/create_note_button"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="center"
+            android:text="CREATE NOTE"></TextView>
+    </LinearLayout>
+
+</RelativeLayout>
