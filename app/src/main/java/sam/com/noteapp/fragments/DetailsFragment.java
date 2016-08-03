@@ -61,22 +61,30 @@ public class DetailsFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_details, container, false);
-        final Toolbar toolbar = (Toolbar) getActivity().findViewById(R.id.toolbar);
 
+        /*Setting up toolbar for this fragment*/
+        final Toolbar toolbar = (Toolbar) getActivity().findViewById(R.id.toolbar);
         ((AppCompatActivity) getActivity()).setSupportActionBar(toolbar);
         ActionBar actionBar = ((AppCompatActivity) getActivity()).getSupportActionBar();
         setHasOptionsMenu(true);
-        textInputLayout = (TextInputLayout) view.findViewById(R.id.edit_note_input_layout);
+
         actionBar.setDisplayHomeAsUpEnabled(true);
         actionBar.setHomeButtonEnabled(true);
         actionBar.setHomeAsUpIndicator(R.drawable.ic_keyboard_arrow_left_black_18dp);
+
+        /*Init toolbar done*/
+
+        /*Initiating layout for edit and read note*/
+        textInputLayout = (TextInputLayout) view.findViewById(R.id.edit_note_input_layout);
         notes = (Notes) getArguments().getSerializable(Constant.NOTE);
         editTextView = (TextView) view.findViewById(R.id.edit_note_button);
         editText = (EditText) view.findViewById(R.id.edit_text_for_content);
         editText.setEnabled(false);
         editText.setText(notes.getNote());
         actionBar.setTitle(notes.getHeader());
+
         isOpenForEdit = false;
+
         editTextView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -102,6 +110,7 @@ public class DetailsFragment extends Fragment {
         editTextView.setText(getString(R.string.done));
         editText.setText(notes.getNote());
         editText.clearFocus();
+        editText.requestFocus();
         isOpenForEdit = true;
         editText.setSingleLine(false);
     }

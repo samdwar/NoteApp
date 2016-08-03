@@ -70,9 +70,10 @@ public class HomeFragment extends Fragment implements OnListItemClickListener {
         ActionBar actionBar = ((AppCompatActivity) getActivity()).getSupportActionBar();
         actionBar.setTitle("Notes");
 
-
+        /*Read data sent from Activity here*/
         notes = (NoteList) getArguments().getSerializable(Constant.LIST_OF_NOTES);
 
+        /*Init recycler view*/
         recyclerView = (RecyclerView) view.findViewById(R.id.all_notes_list);
         homeListAdapter = new HomeListAdapter();
         homeListAdapter.setNotesList(notes.getNotesList());
@@ -81,6 +82,7 @@ public class HomeFragment extends Fragment implements OnListItemClickListener {
         recyclerView.setLayoutManager(mLayoutManager);
         recyclerView.setItemAnimator(new DefaultItemAnimator());
         recyclerView.setAdapter(homeListAdapter);
+
         createNoteButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -112,15 +114,15 @@ public class HomeFragment extends Fragment implements OnListItemClickListener {
     }
 
     @Override
-    public void onClick(View view, int position) {
-        Log.i(TAG, "onClick: item clicked  = " + position);
-        mListener.onListItemClick(position);
+    public void onClick(View view, int noteId) {
+        Log.i(TAG, "onClick: item clicked  = " + noteId);
+        mListener.onListItemClick(noteId);
 
     }
 
     @Override
-    public void onLongPressClick(View view, int position) {
-        mListener.onListItemLongClick(position);
+    public void onLongPressClick(View view, int noteId) {
+        mListener.onListItemLongClick(noteId);
     }
 
     public void refresh(List<Notes> notesList) {

@@ -22,7 +22,7 @@ public class HomeListAdapter extends RecyclerView.Adapter<HomeListAdapter.ListVi
     private static final String TAG = "HomeListAdapter";
     private OnListItemClickListener onListItemClickListener;
     private List<Notes> notesList;
-    private SparseBooleanArray selectedItems;
+
     public void setNotesList(List<Notes> notesList) {
         this.notesList = notesList;
     }
@@ -74,34 +74,5 @@ public class HomeListAdapter extends RecyclerView.Adapter<HomeListAdapter.ListVi
             header = (TextView) itemView.findViewById(R.id.header_text);
             note = (TextView) itemView.findViewById(R.id.content_text);
         }
-    }
-
-
-    public void toggleSelection(int pos) {
-        if (selectedItems.get(pos, false)) {
-            selectedItems.delete(pos);
-        }
-        else {
-            selectedItems.put(pos, true);
-        }
-        notifyItemChanged(pos);
-    }
-
-    public void clearSelections() {
-        selectedItems.clear();
-        notifyDataSetChanged();
-    }
-
-    public int getSelectedItemCount() {
-        return selectedItems.size();
-    }
-
-    public List<Integer> getSelectedItems() {
-        List<Integer> items =
-                new ArrayList<Integer>(selectedItems.size());
-        for (int i = 0; i < selectedItems.size(); i++) {
-            items.add(selectedItems.keyAt(i));
-        }
-        return items;
     }
 }

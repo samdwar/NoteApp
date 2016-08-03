@@ -47,18 +47,31 @@ public class HomeActivity extends AppCompatActivity implements HomeFragment.OnFr
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
 
+        /*Set the coordinator layout for displaying Snackbar message*/
         coordinatorLayout = (CoordinatorLayout) findViewById(R.id.coordinator_layout_for_snackbar);
 
+        /*init and setting up toolbar*/
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
+        /*Init database helper class for  DB operation*/
         dataBaseHelper = new DataBaseHelper(getApplicationContext());
+
+        /*Enable navigation home up button for back*/
         getSupportActionBar().setDisplayShowHomeEnabled(true);
 
+        /*Get all notes for displaying in List*/
         List<Notes> notesList = dataBaseHelper.getAllTags();
+
+        /*Once get render in the fragment*/
         openHomeFragment(notesList);
     }
 
+    /**
+     * Display message as Snackbar notification
+     *
+     * @param message
+     */
     private void showSnackbarMessage(String message) {
         final Snackbar snackbar = Snackbar.make(coordinatorLayout, message, Snackbar.LENGTH_LONG);
         Handler handler = new Handler();
@@ -85,11 +98,23 @@ public class HomeActivity extends AppCompatActivity implements HomeFragment.OnFr
         fragmentTransaction.commit();
     }
 
+
+    /**
+     * Callback method for deletion of a note
+     *
+     * @param note
+     */
     @Override
     public void onDeleteNote(Notes note) {
         deleteNote(note.getId());
     }
 
+
+    /**
+     * callback method for new note creation
+     *
+     * @param notes
+     */
     @Override
     public void onNoteCreated(Notes notes) {
         dataBaseHelper.createNote(notes);
@@ -99,14 +124,25 @@ public class HomeActivity extends AppCompatActivity implements HomeFragment.OnFr
         showSnackbarMessage(SUCCESS_MSG_FOR_NEW_NOTE);
     }
 
+    /**
+     * Callback method for updating note
+     *
+     * @param editedNote
+     */
     @Override
     public void onEditSaveNote(Notes editedNote) {
         dataBaseHelper.updateNote(editedNote);
         List<Notes> notesList = dataBaseHelper.getAllTags();
         homeFragment.refresh(notesList);
+        shouldDisplayHomeUp();
         showSnackbarMessage(SUCCESS_MSG_FOR_UPDATE_NOTE);
     }
 
+    /**
+     * Handle click on one note item
+     *
+     * @param position
+     */
     @Override
     public void onListItemClick(int position) {
         Notes notes = dataBaseHelper.getNote(position);
