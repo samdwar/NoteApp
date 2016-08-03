@@ -15,9 +15,13 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import java.util.List;
+
 import sam.com.noteapp.R;
 import sam.com.noteapp.adapters.HomeListAdapter;
 import sam.com.noteapp.listeners.OnListItemClickListener;
+import sam.com.noteapp.pojo.NoteList;
+import sam.com.noteapp.pojo.Notes;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -33,6 +37,7 @@ public class HomeFragment extends Fragment implements OnListItemClickListener {
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
     private static final String TAG = "NOTE_APP";
+    private NoteList notes;
 
     // TODO: Rename and change types of parameters
     private String mParam1;
@@ -43,36 +48,17 @@ public class HomeFragment extends Fragment implements OnListItemClickListener {
     private RecyclerView recyclerView;
 
     private TextView createNoteButton;
+
+    public HomeListAdapter getHomeListAdapter() {
+        return homeListAdapter;
+    }
+
+    private HomeListAdapter homeListAdapter;
+
     public HomeFragment() {
         // Required empty public constructor
     }
 
-    /**
-     * Use this factory method to create a new instance of
-     * this fragment using the provided parameters.
-     *
-     * @param param1 Parameter 1.
-     * @param param2 Parameter 2.
-     * @return A new instance of fragment HomeFragment.
-     */
-    // TODO: Rename and change types and number of parameters
-    public static HomeFragment newInstance(String param1, String param2) {
-        HomeFragment fragment = new HomeFragment();
-        Bundle args = new Bundle();
-        args.putString(ARG_PARAM1, param1);
-        args.putString(ARG_PARAM2, param2);
-        fragment.setArguments(args);
-        return fragment;
-    }
-
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
-            mParam2 = getArguments().getString(ARG_PARAM2);
-        }
-    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -83,9 +69,11 @@ public class HomeFragment extends Fragment implements OnListItemClickListener {
         Toolbar toolbar = (Toolbar) view.findViewById(R.id.toolbar);
 
         ((AppCompatActivity) getActivity()).setSupportActionBar(toolbar);
-
+        notes = (NoteList) getArguments().getSerializable("LIST_OF_NOTES");
+        Log.i(TAG, "onCreateView: " + notes);
         recyclerView = (RecyclerView) view.findViewById(R.id.all_notes_list);
-        HomeListAdapter homeListAdapter = new HomeListAdapter();
+        homeListAdapter = new HomeListAdapter();
+        homeListAdapter.setNotesList(notes.getNotesList());
         homeListAdapter.setOnListItemClickListener(this);
         RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getActivity());
         recyclerView.setLayoutManager(mLayoutManager);
@@ -135,6 +123,11 @@ public class HomeFragment extends Fragment implements OnListItemClickListener {
 
     }
 
+    public void refresh(List<Notes> notesList) {
+        notes.setNotesList(notesList);
+        homeListAdapter.notifyDataSetChanged();
+    }
+
     /**
      * This interface must be implemented by activities that contain this
      * fragment to allow an interaction in this fragment to be communicated
@@ -150,6 +143,7 @@ public class HomeFragment extends Fragment implements OnListItemClickListener {
         void onFragmentInteraction(Uri uri);
 
         void onListItemClick(int position);
+
         void openCreateNewNoteScreen();
     }
 }

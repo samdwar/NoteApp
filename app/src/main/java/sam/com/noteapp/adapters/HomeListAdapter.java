@@ -6,15 +6,25 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import java.util.List;
+
 import sam.com.noteapp.R;
 import sam.com.noteapp.listeners.OnListItemClickListener;
+import sam.com.noteapp.pojo.Notes;
 
 /**
  * Created by sam on 2/8/16.
  */
 public class HomeListAdapter extends RecyclerView.Adapter<HomeListAdapter.ListViewHolder> {
     private OnListItemClickListener onListItemClickListener;
+    private List<Notes> notesList;
+
+    public void setNotesList(List<Notes> notesList) {
+        this.notesList = notesList;
+    }
+
     @Override
+
     public ListViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View itemView = LayoutInflater.from(parent.getContext())
                 .inflate(R.layout.list_item, parent, false);
@@ -23,18 +33,19 @@ public class HomeListAdapter extends RecyclerView.Adapter<HomeListAdapter.ListVi
 
     @Override
     public void onBindViewHolder(ListViewHolder holder, final int position) {
-        holder.header.setText("Header");
+        holder.header.setText(notesList.get(position).getHeader());
+        holder.note.setText(notesList.get(position).getNote());
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                onListItemClickListener.onClick(view,position);
+                onListItemClickListener.onClick(view, position);
             }
         });
     }
 
     @Override
     public int getItemCount() {
-        return 10;
+        return notesList.size();
     }
 
     public void setOnListItemClickListener(OnListItemClickListener onListItemClickListener) {
@@ -43,10 +54,12 @@ public class HomeListAdapter extends RecyclerView.Adapter<HomeListAdapter.ListVi
 
     public class ListViewHolder extends RecyclerView.ViewHolder {
         private TextView header;
+        private TextView note;
 
         public ListViewHolder(View itemView) {
             super(itemView);
             header = (TextView) itemView.findViewById(R.id.header_text);
+            note = (TextView) itemView.findViewById(R.id.content_text);
         }
     }
 }

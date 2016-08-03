@@ -7,8 +7,13 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.EditText;
+import android.widget.TextView;
+
+import org.w3c.dom.Text;
 
 import sam.com.noteapp.R;
+import sam.com.noteapp.pojo.Notes;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -19,53 +24,41 @@ import sam.com.noteapp.R;
  * create an instance of this fragment.
  */
 public class CreateNoteFragment extends Fragment {
-    // TODO: Rename parameter arguments, choose names that match
-    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-    private static final String ARG_PARAM1 = "param1";
-    private static final String ARG_PARAM2 = "param2";
-
-    // TODO: Rename and change types of parameters
-    private String mParam1;
-    private String mParam2;
 
     private OnFragmentInteractionListener mListener;
+    private EditText editTextHeader;
+    private EditText editTextNote;
+    private TextView textViewCreateButton;
 
     public CreateNoteFragment() {
         // Required empty public constructor
-    }
-
-    /**
-     * Use this factory method to create a new instance of
-     * this fragment using the provided parameters.
-     *
-     * @param param1 Parameter 1.
-     * @param param2 Parameter 2.
-     * @return A new instance of fragment CreateNoteFragment.
-     */
-    // TODO: Rename and change types and number of parameters
-    public static CreateNoteFragment newInstance(String param1, String param2) {
-        CreateNoteFragment fragment = new CreateNoteFragment();
-        Bundle args = new Bundle();
-        args.putString(ARG_PARAM1, param1);
-        args.putString(ARG_PARAM2, param2);
-        fragment.setArguments(args);
-        return fragment;
-    }
-
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
-            mParam2 = getArguments().getString(ARG_PARAM2);
-        }
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_create_note, container, false);
+        View view = inflater.inflate(R.layout.fragment_create_note, container, false);
+        editTextHeader = (EditText) view.findViewById(R.id.edit_text_for_header);
+        editTextNote = (EditText) view.findViewById(R.id.edit_text_for_content);
+        textViewCreateButton = (TextView) view.findViewById(R.id.save_note_button);
+        textViewCreateButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                String header = editTextHeader.getText().toString();
+                String note = editTextNote.getText().toString();
+                Notes notes = new Notes();
+                notes.setNote(note);
+                notes.setHeader(header);
+                saveNewNote(notes);
+            }
+        });
+        return view;
+    }
+
+    private void saveNewNote(Notes notes) {
+        mListener.onNoteCreated(notes);
+        getFragmentManager().popBackStack();
     }
 
     // TODO: Rename method, update argument and hook method into UI event
@@ -105,5 +98,7 @@ public class CreateNoteFragment extends Fragment {
     public interface OnFragmentInteractionListener {
         // TODO: Update argument type and name
         void onFragmentInteraction(Uri uri);
+
+        void onNoteCreated(Notes notes);
     }
 }
