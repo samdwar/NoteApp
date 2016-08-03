@@ -14,4 +14,6 @@
     <string name="err_msg_header">Please add title for your note</string>
     <string name="err_msg_note">Please add description for your note</string>
     <string name="edit_err_msg">Please put some descritpion</string>
+    <string name="edit_note">EDIT NOTE</string>
+    <string name="delete">Delete</string>
 </resources>

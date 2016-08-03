@@ -16,16 +16,9 @@ import android.widget.EditText;
 import android.widget.TextView;
 
 import sam.com.noteapp.R;
+import sam.com.noteapp.constants.Constant;
 import sam.com.noteapp.pojo.Notes;
 
-/**
- * A simple {@link Fragment} subclass.
- * Activities that contain this fragment must implement the
- * {@link DeleteFragment.OnFragmentInteractionListener} interface
- * to handle interaction events.
- * Use the {@link DeleteFragment#newInstance} factory method to
- * create an instance of this fragment.
- */
 public class DeleteFragment extends Fragment {
 
     private EditText editText;
@@ -53,7 +46,7 @@ public class DeleteFragment extends Fragment {
         actionBar.setHomeButtonEnabled(true);
         actionBar.setHomeAsUpIndicator(R.drawable.ic_keyboard_arrow_left_black_18dp);
         final View deleteButtonView = view.findViewById(R.id.delete_note_view);
-        notes = (Notes) getArguments().getSerializable("NOTES");
+        notes = (Notes) getArguments().getSerializable(Constant.NOTE);
         deleteTextView = (TextView) view.findViewById(R.id.delete_note_button);
         editText = (EditText) view.findViewById(R.id.edit_text_for_content);
         editText.setEnabled(false);
@@ -76,24 +69,6 @@ public class DeleteFragment extends Fragment {
         getFragmentManager().popBackStack();
     }
 
-    private void editTheContent() {
-        editText.setEnabled(true);
-        editText.setInputType(InputType.TYPE_CLASS_TEXT);
-        editText.setFocusable(true);
-        deleteTextView.setText("DONE");
-        isOpenForEdit = true;
-        editText.setSingleLine(false);
-        editText.setImeOptions(EditorInfo.IME_FLAG_NO_ENTER_ACTION);
-
-    }
-
-    // TODO: Rename method, update argument and hook method into UI event
-    public void onButtonPressed(Uri uri) {
-        if (mListener != null) {
-            mListener.onFragmentInteraction(uri);
-        }
-    }
-
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
@@ -111,20 +86,7 @@ public class DeleteFragment extends Fragment {
         mListener = null;
     }
 
-    /**
-     * This interface must be implemented by activities that contain this
-     * fragment to allow an interaction in this fragment to be communicated
-     * to the activity and potentially other fragments contained in that
-     * activity.
-     * <p/>
-     * See the Android Training lesson <a href=
-     * "http://developer.android.com/training/basics/fragments/communicating.html"
-     * >Communicating with Other Fragments</a> for more information.
-     */
     public interface OnFragmentInteractionListener {
-        // TODO: Update argument type and name
-        void onFragmentInteraction(Uri uri);
-
         void onDeleteNote(Notes editedNote);
     }
 }

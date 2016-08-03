@@ -1,17 +1,24 @@
 package sam.com.noteapp.fragments;
 
+import android.app.Dialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.TextInputLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.text.TextUtilsCompat;
 import android.support.v7.app.ActionBar;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.text.InputType;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
@@ -21,6 +28,7 @@ import android.widget.EditText;
 import android.widget.TextView;
 
 import sam.com.noteapp.R;
+import sam.com.noteapp.constants.Constant;
 import sam.com.noteapp.pojo.NoteList;
 import sam.com.noteapp.pojo.Notes;
 
@@ -34,12 +42,14 @@ import sam.com.noteapp.pojo.Notes;
  */
 public class DetailsFragment extends Fragment {
 
+    private static final String TAG = "DetailsFragment";
     private EditText editText;
     private TextView editTextView;
     private boolean isOpenForEdit;
     private OnFragmentInteractionListener mListener;
     private Notes notes;
     private TextInputLayout textInputLayout;
+    private AlertDialog alert;
 
     public DetailsFragment() {
         // Required empty public constructor
@@ -55,17 +65,16 @@ public class DetailsFragment extends Fragment {
 
         ((AppCompatActivity) getActivity()).setSupportActionBar(toolbar);
         ActionBar actionBar = ((AppCompatActivity) getActivity()).getSupportActionBar();
-
+        setHasOptionsMenu(true);
         textInputLayout = (TextInputLayout) view.findViewById(R.id.edit_note_input_layout);
         actionBar.setDisplayHomeAsUpEnabled(true);
         actionBar.setHomeButtonEnabled(true);
         actionBar.setHomeAsUpIndicator(R.drawable.ic_keyboard_arrow_left_black_18dp);
-        notes = (Notes) getArguments().getSerializable("NOTES");
+        notes = (Notes) getArguments().getSerializable(Constant.NOTE);
         editTextView = (TextView) view.findViewById(R.id.edit_note_button);
         editText = (EditText) view.findViewById(R.id.edit_text_for_content);
         editText.setEnabled(false);
         editText.setText(notes.getNote());
-
         actionBar.setTitle(notes.getHeader());
         isOpenForEdit = false;
         editTextView.setOnClickListener(new View.OnClickListener() {
@@ -89,10 +98,10 @@ public class DetailsFragment extends Fragment {
 
     private void editTheContent() {
         editText.setEnabled(true);
-
         editText.setFocusable(true);
+        editTextView.setText(getString(R.string.done));
+        editText.setText(notes.getNote());
         editText.clearFocus();
-        editTextView.setText("DONE");
         isOpenForEdit = true;
         editText.setSingleLine(false);
     }
@@ -100,13 +109,6 @@ public class DetailsFragment extends Fragment {
     private void saveAndGoBackToPrevScreen(Notes editedNote) {
         mListener.onEditSaveNote(editedNote);
         getFragmentManager().popBackStack();
-    }
-
-    // TODO: Rename method, update argument and hook method into UI event
-    public void onButtonPressed(Uri uri) {
-        if (mListener != null) {
-            mListener.onFragmentInteraction(uri);
-        }
     }
 
     @Override
@@ -137,9 +139,47 @@ public class DetailsFragment extends Fragment {
      * >Communicating with Other Fragments</a> for more information.
      */
     public interface OnFragmentInteractionListener {
-        // TODO: Update argument type and name
-        void onFragmentInteraction(Uri uri);
-
         void onEditSaveNote(Notes editedNote);
+
+        void onDeleteNote(Notes noteForDelete);
+    }
+
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        inflater.inflate(R.menu.menu, menu);  // Use filter.xml from step 1
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        int id = item.getItemId();
+        if (id == R.id.delete_action) {
+            showPopUpForDelete(notes);
+            return true;
+        }
+
+        return super.onOptionsItemSelected(item);
+    }
+
+    private void showPopUpForDelete(final Notes notes) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+        builder.setMessage(notes.getHeader())
+                .setTitle(Constant.DELETE_MESSAGE);
+
+        builder.setPositiveButton(Constant.OK, new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int id) {
+                alert.dismiss();
+                mListener.onDeleteNote(notes);
+                getFragmentManager().popBackStack();
+
+            }
+        });
+
+        builder.setNegativeButton(Constant.CANCEL, new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int id) {
+                alert.dismiss();
+            }
+        });
+        alert = builder.create();
+        alert.show();
     }
 }

@@ -11,14 +11,13 @@
         android:layout_gravity="center"
         card_view:cardCornerRadius="0dp"
         card_view:cardElevation="0dp">
-        <!-- TODO: Update blank fragment layout -->
+
         <FrameLayout
             android:id="@+id/content_view"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_above="@+id/edit_note_view"
             android:layout_marginLeft="24dp"
-
             android:layout_marginRight="24dp">
 
             <android.support.design.widget.TextInputLayout

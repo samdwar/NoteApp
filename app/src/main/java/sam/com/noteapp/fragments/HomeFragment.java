@@ -12,6 +12,9 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
@@ -20,18 +23,11 @@ import java.util.List;
 
 import sam.com.noteapp.R;
 import sam.com.noteapp.adapters.HomeListAdapter;
+import sam.com.noteapp.constants.Constant;
 import sam.com.noteapp.listeners.OnListItemClickListener;
 import sam.com.noteapp.pojo.NoteList;
 import sam.com.noteapp.pojo.Notes;
 
-/**
- * A simple {@link Fragment} subclass.
- * Activities that contain this fragment must implement the
- * {@link HomeFragment.OnFragmentInteractionListener} interface
- * to handle interaction events.
- * Use the {@link HomeFragment#newInstance} factory method to
- * create an instance of this fragment.
- */
 public class HomeFragment extends Fragment implements OnListItemClickListener {
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -56,6 +52,7 @@ public class HomeFragment extends Fragment implements OnListItemClickListener {
 
     private HomeListAdapter homeListAdapter;
 
+
     public HomeFragment() {
         // Required empty public constructor
     }
@@ -68,15 +65,14 @@ public class HomeFragment extends Fragment implements OnListItemClickListener {
         View view = inflater.inflate(R.layout.fragment_home, container, false);
         createNoteButton = (TextView) view.findViewById(R.id.create_note_button);
         Toolbar toolbar = (Toolbar) getActivity().findViewById(R.id.toolbar);
-
         ((AppCompatActivity) getActivity()).setSupportActionBar(toolbar);
 
-        ActionBar actionBar = ((AppCompatActivity)getActivity()).getSupportActionBar();
+        ActionBar actionBar = ((AppCompatActivity) getActivity()).getSupportActionBar();
         actionBar.setTitle("Notes");
 
 
-        notes = (NoteList) getArguments().getSerializable("LIST_OF_NOTES");
-        Log.i(TAG, "onCreateView: " + notes);
+        notes = (NoteList) getArguments().getSerializable(Constant.LIST_OF_NOTES);
+
         recyclerView = (RecyclerView) view.findViewById(R.id.all_notes_list);
         homeListAdapter = new HomeListAdapter();
         homeListAdapter.setNotesList(notes.getNotesList());
@@ -96,13 +92,6 @@ public class HomeFragment extends Fragment implements OnListItemClickListener {
 
     private void openCreateNewNoteScreen() {
         mListener.openCreateNewNoteScreen();
-    }
-
-    // TODO: Rename method, update argument and hook method into UI event
-    public void onButtonPressed(Uri uri) {
-        if (mListener != null) {
-            mListener.onFragmentInteraction(uri);
-        }
     }
 
     @Override
@@ -139,23 +128,27 @@ public class HomeFragment extends Fragment implements OnListItemClickListener {
         homeListAdapter.notifyDataSetChanged();
     }
 
-    /**
-     * This interface must be implemented by activities that contain this
-     * fragment to allow an interaction in this fragment to be communicated
-     * to the activity and potentially other fragments contained in that
-     * activity.
-     * <p/>
-     * See the Android Training lesson <a href=
-     * "http://developer.android.com/training/basics/fragments/communicating.html"
-     * >Communicating with Other Fragments</a> for more information.
-     */
     public interface OnFragmentInteractionListener {
-        // TODO: Update argument type and name
-        void onFragmentInteraction(Uri uri);
-
         void onListItemClick(int position);
+
         void onListItemLongClick(int position);
 
         void openCreateNewNoteScreen();
+    }
+
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        inflater.inflate(R.menu.menu, menu);  // Use filter.xml from step 1
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        int id = item.getItemId();
+        if (id == R.id.delete_action) {
+            //Do whatever you want to do
+            return true;
+        }
+
+        return super.onOptionsItemSelected(item);
     }
 }

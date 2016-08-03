@@ -12,11 +12,14 @@ import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Gravity;
+import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.View;
 import android.widget.FrameLayout;
 
 import java.util.List;
 
+import sam.com.noteapp.constants.Constant;
 import sam.com.noteapp.dao.DataBaseHelper;
 import sam.com.noteapp.fragments.CreateNoteFragment;
 import sam.com.noteapp.fragments.DeleteFragment;
@@ -53,7 +56,7 @@ public class HomeActivity extends AppCompatActivity implements HomeFragment.OnFr
         getSupportActionBar().setDisplayShowHomeEnabled(true);
 
         List<Notes> notesList = dataBaseHelper.getAllTags();
-        openHomeFragment(notesList, false);
+        openHomeFragment(notesList);
     }
 
     private void showSnackbarMessage(String message) {
@@ -64,27 +67,22 @@ public class HomeActivity extends AppCompatActivity implements HomeFragment.OnFr
             public void run() {
                 snackbar.show();
             }
-        }, 500);
+        }, 1000);
 
     }
 
-    private void openHomeFragment(List<Notes> notesList, boolean reload) {
+    private void openHomeFragment(List<Notes> notesList) {
         android.support.v4.app.FragmentManager supportFragmentManager = getSupportFragmentManager();
         android.support.v4.app.FragmentTransaction fragmentTransaction = supportFragmentManager.beginTransaction();
         fragmentTransaction.setCustomAnimations(R.anim.enter_from_right, R.anim.exit_to_left);
         Bundle bundle = new Bundle();
         NoteList listOfNotes = new NoteList();
         listOfNotes.setNotesList(notesList);
-        bundle.putSerializable("LIST_OF_NOTES", listOfNotes);
+        bundle.putSerializable(Constant.LIST_OF_NOTES, listOfNotes);
         homeFragment = new HomeFragment();
         homeFragment.setArguments(bundle);
-        fragmentTransaction.add(R.id.fragment, homeFragment, "HomeFragment");
+        fragmentTransaction.add(R.id.fragment, homeFragment, Constant.HOME_FRAGMENT);
         fragmentTransaction.commit();
-    }
-
-    @Override
-    public void onFragmentInteraction(Uri uri) {
-
     }
 
     @Override
@@ -124,9 +122,9 @@ public class HomeActivity extends AppCompatActivity implements HomeFragment.OnFr
     private void showPopUpForDelete(final Notes notes) {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setMessage(notes.getHeader())
-                .setTitle("Do you want to delete this note ?");
+                .setTitle(Constant.DELETE_MESSAGE);
 
-        builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+        builder.setPositiveButton(Constant.OK, new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int id) {
                 alert.dismiss();
                 openScreenForNoteDeletion(notes);
@@ -134,7 +132,7 @@ public class HomeActivity extends AppCompatActivity implements HomeFragment.OnFr
             }
         });
 
-        builder.setNegativeButton("CANCEL", new DialogInterface.OnClickListener() {
+        builder.setNegativeButton(Constant.CANCEL, new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int id) {
                 alert.dismiss();
             }
@@ -144,15 +142,14 @@ public class HomeActivity extends AppCompatActivity implements HomeFragment.OnFr
     }
 
     private void openScreenForNoteDeletion(Notes notes) {
-        Log.i(TAG, "onListItemClick: open detail fragment");
         android.support.v4.app.FragmentManager fragmentManager = getSupportFragmentManager();
         android.support.v4.app.FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
         fragmentTransaction.setCustomAnimations(R.anim.enter_from_right, R.anim.exit_to_left, R.anim.enter_from_left, R.anim.exit_to_right);
         DeleteFragment deleteFragment = new DeleteFragment();
         Bundle bundle = new Bundle();
-        bundle.putSerializable("NOTES", notes);
+        bundle.putSerializable(Constant.NOTE, notes);
         deleteFragment.setArguments(bundle);
-        fragmentTransaction.replace(R.id.fragment, deleteFragment);
+        fragmentTransaction.replace(R.id.fragment, deleteFragment, Constant.DELETE_FRAGMENT);
         fragmentTransaction.addToBackStack(null);
         fragmentTransaction.commit();
 
@@ -170,29 +167,27 @@ public class HomeActivity extends AppCompatActivity implements HomeFragment.OnFr
 
     @Override
     public void openCreateNewNoteScreen() {
-        Log.i(TAG, "onListItemClick: open create new note fragment");
 
         android.support.v4.app.FragmentManager fragmentManager = getSupportFragmentManager();
         android.support.v4.app.FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
         fragmentTransaction.setCustomAnimations(R.anim.enter_from_right, R.anim.exit_to_left, R.anim.enter_from_left, R.anim.exit_to_right);
         CreateNoteFragment createNoteFragment = new CreateNoteFragment();
-        fragmentTransaction.replace(R.id.fragment, createNoteFragment);
+        fragmentTransaction.replace(R.id.fragment, createNoteFragment, Constant.CREATE_NOTE_FRAGMENT);
         fragmentTransaction.addToBackStack(null);
 
         fragmentTransaction.commit();
     }
 
     private void openDetailsFragment(Notes notes) {
-        Log.i(TAG, "onListItemClick: open detail fragment");
 
         android.support.v4.app.FragmentManager fragmentManager = getSupportFragmentManager();
         android.support.v4.app.FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
         fragmentTransaction.setCustomAnimations(R.anim.enter_from_right, R.anim.exit_to_left, R.anim.enter_from_left, R.anim.exit_to_right);
         DetailsFragment detailsFragment = new DetailsFragment();
         Bundle bundle = new Bundle();
-        bundle.putSerializable("NOTES", notes);
+        bundle.putSerializable(Constant.NOTE, notes);
         detailsFragment.setArguments(bundle);
-        fragmentTransaction.replace(R.id.fragment, detailsFragment);
+        fragmentTransaction.replace(R.id.fragment, detailsFragment, Constant.DETAIL_NOTE_FRAGMENT);
         fragmentTransaction.addToBackStack(null);
         fragmentTransaction.commit();
     }
