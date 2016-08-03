@@ -3,14 +3,19 @@
 
     <solid android:color="#ff0000"></solid>
 
-    <stroke
-        android:width="2dp"
-        android:color="#C4CDE0"></stroke>
+    <!--    <stroke
+            android:width="2dp"
+            android:color="#C4CDE0"></stroke>-->
 
     <padding></padding>
 
+    <gradient
+        android:angle="45"
+        android:endColor="#FF9262"
+        android:startColor="#FF8080" />
+
     <corners
-        android:bottomLeftRadius="5dp"
-        android:bottomRightRadius="5dp"></corners>
+        android:bottomLeftRadius="11dp"
+        android:bottomRightRadius="11dp"></corners>
 
 </shape>

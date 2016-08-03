@@ -2,24 +2,26 @@
     xmlns:card_view="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:background="#FFFFFF"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:background="#FFFFFF">
+
     <View
         android:id="@+id/card_view_separator"
         android:layout_width="match_parent"
-        android:background="#1d000000"
-        android:layout_height="1dp">
+        android:layout_height="1dp"
+        android:background="#1d000000">
 
     </View>
+
     <android.support.v7.widget.CardView xmlns:card_view="http://schemas.android.com/apk/res-auto"
         android:id="@+id/card_view"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_gravity="center"
+        android:layout_above="@+id/create_note_view"
         android:layout_below="@id/card_view_separator"
+        android:layout_gravity="center"
         card_view:cardCornerRadius="0dp"
-        card_view:cardElevation="0dp"
-        android:layout_above="@+id/create_note_view">
+        card_view:cardElevation="0dp">
 
         <android.support.v7.widget.RecyclerView
             android:id="@+id/all_notes_list"
@@ -33,8 +35,11 @@
     <LinearLayout
         android:id="@+id/create_note_view"
         android:layout_width="match_parent"
-        android:layout_height="70dp"
+        android:layout_height="60dp"
         android:layout_alignParentBottom="true"
+        android:layout_marginBottom="1dp"
+        android:layout_marginLeft="1dp"
+        android:layout_marginRight="1dp"
         android:background="@drawable/shape"
         android:clickable="true">
 
@@ -44,6 +49,10 @@
             android:layout_height="match_parent"
             android:clickable="true"
             android:gravity="center"
-            android:text="CREATE NOTE"></TextView>
+            android:text="@string/new_note"
+            android:textColor="#ffffff"
+            android:textSize="16dp"
+            android:textStyle="bold"></TextView>
     </LinearLayout>
+
 </RelativeLayout>

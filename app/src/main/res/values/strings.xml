@@ -5,7 +5,13 @@
     <string name="hello_blank_fragment">Notes</string>
     <string name="header">Header</string>
     <string name="create_notes">CRERATE NOTE</string>
-    <string name="edit_text">Your notes go here...
+    <string name="edit_text">Provide description for note here...
     </string>
-    <string name="header_text">Note name</string>
+    <string name="header_text">Enter note name</string>
+    <string name="new_note">CREATE NEW</string>
+    <string name="done">DONE</string>
+    <string name="delete_note">DELETE</string>
+    <string name="err_msg_header">Please add title for your note</string>
+    <string name="err_msg_note">Please add description for your note</string>
+    <string name="edit_err_msg">Please put some descritpion</string>
 </resources>

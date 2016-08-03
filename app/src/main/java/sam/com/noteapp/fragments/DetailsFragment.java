@@ -3,15 +3,20 @@ package sam.com.noteapp.fragments;
 import android.content.Context;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.design.widget.TextInputLayout;
 import android.support.v4.app.Fragment;
+import android.support.v4.text.TextUtilsCompat;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.text.InputType;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
 import android.view.inputmethod.EditorInfo;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.TextView;
 
@@ -34,6 +39,7 @@ public class DetailsFragment extends Fragment {
     private boolean isOpenForEdit;
     private OnFragmentInteractionListener mListener;
     private Notes notes;
+    private TextInputLayout textInputLayout;
 
     public DetailsFragment() {
         // Required empty public constructor
@@ -50,15 +56,14 @@ public class DetailsFragment extends Fragment {
         ((AppCompatActivity) getActivity()).setSupportActionBar(toolbar);
         ActionBar actionBar = ((AppCompatActivity) getActivity()).getSupportActionBar();
 
+        textInputLayout = (TextInputLayout) view.findViewById(R.id.edit_note_input_layout);
         actionBar.setDisplayHomeAsUpEnabled(true);
         actionBar.setHomeButtonEnabled(true);
         actionBar.setHomeAsUpIndicator(R.drawable.ic_keyboard_arrow_left_black_18dp);
-        final View editButtonView = view.findViewById(R.id.edit_note_view);
         notes = (Notes) getArguments().getSerializable("NOTES");
         editTextView = (TextView) view.findViewById(R.id.edit_note_button);
         editText = (EditText) view.findViewById(R.id.edit_text_for_content);
         editText.setEnabled(false);
-        editText.setFocusable(false);
         editText.setText(notes.getNote());
 
         actionBar.setTitle(notes.getHeader());
@@ -67,6 +72,10 @@ public class DetailsFragment extends Fragment {
             @Override
             public void onClick(View view) {
                 if (isOpenForEdit) {
+                    if (TextUtils.isEmpty(editText.getText())) {
+                        textInputLayout.setError(getString(R.string.edit_err_msg));
+                        return;
+                    }
                     String editedText = editText.getText().toString();
                     notes.setNote(editedText);
                     saveAndGoBackToPrevScreen(notes);
@@ -80,13 +89,12 @@ public class DetailsFragment extends Fragment {
 
     private void editTheContent() {
         editText.setEnabled(true);
-        editText.setInputType(InputType.TYPE_CLASS_TEXT);
+
         editText.setFocusable(true);
+        editText.clearFocus();
         editTextView.setText("DONE");
         isOpenForEdit = true;
         editText.setSingleLine(false);
-        editText.setImeOptions(EditorInfo.IME_FLAG_NO_ENTER_ACTION);
-
     }
 
     private void saveAndGoBackToPrevScreen(Notes editedNote) {

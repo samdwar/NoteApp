@@ -129,6 +129,11 @@ public class HomeFragment extends Fragment implements OnListItemClickListener {
 
     }
 
+    @Override
+    public void onLongPressClick(View view, int position) {
+        mListener.onListItemLongClick(position);
+    }
+
     public void refresh(List<Notes> notesList) {
         notes.setNotesList(notesList);
         homeListAdapter.notifyDataSetChanged();
@@ -149,6 +154,7 @@ public class HomeFragment extends Fragment implements OnListItemClickListener {
         void onFragmentInteraction(Uri uri);
 
         void onListItemClick(int position);
+        void onListItemLongClick(int position);
 
         void openCreateNewNoteScreen();
     }

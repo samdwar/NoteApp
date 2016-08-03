@@ -3,20 +3,17 @@ package sam.com.noteapp.fragments;
 import android.content.Context;
 import android.net.Uri;
 import android.os.Bundle;
-import android.support.design.widget.TextInputLayout;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.text.TextUtils;
-import android.util.Log;
+import android.text.InputType;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.EditorInfo;
 import android.widget.EditText;
 import android.widget.TextView;
-
-import org.w3c.dom.Text;
 
 import sam.com.noteapp.R;
 import sam.com.noteapp.pojo.Notes;
@@ -24,73 +21,70 @@ import sam.com.noteapp.pojo.Notes;
 /**
  * A simple {@link Fragment} subclass.
  * Activities that contain this fragment must implement the
- * {@link CreateNoteFragment.OnFragmentInteractionListener} interface
+ * {@link DeleteFragment.OnFragmentInteractionListener} interface
  * to handle interaction events.
- * Use the {@link CreateNoteFragment#newInstance} factory method to
+ * Use the {@link DeleteFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class CreateNoteFragment extends Fragment {
+public class DeleteFragment extends Fragment {
 
+    private EditText editText;
+    private TextView deleteTextView;
+    private boolean isOpenForEdit;
     private OnFragmentInteractionListener mListener;
-    private EditText editTextHeader;
-    private EditText editTextNote;
-    private TextView textViewCreateButton;
-    private Toolbar toolbar;
-    private TextInputLayout textInputLayoutHeader;
-    private TextInputLayout textInputLayoutNote;
+    private Notes notes;
 
-
-    public CreateNoteFragment() {
+    public DeleteFragment() {
         // Required empty public constructor
     }
+
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        View view = inflater.inflate(R.layout.fragment_create_note, container, false);
+        View view = inflater.inflate(R.layout.fragment_delete, container, false);
+        final Toolbar toolbar = (Toolbar) getActivity().findViewById(R.id.toolbar);
 
-        toolbar = (Toolbar) getActivity().findViewById(R.id.toolbar);
-
+        ((AppCompatActivity) getActivity()).setSupportActionBar(toolbar);
         ActionBar actionBar = ((AppCompatActivity) getActivity()).getSupportActionBar();
-        actionBar.setTitle("Create new note");
+
         actionBar.setDisplayHomeAsUpEnabled(true);
         actionBar.setHomeButtonEnabled(true);
         actionBar.setHomeAsUpIndicator(R.drawable.ic_keyboard_arrow_left_black_18dp);
+        final View deleteButtonView = view.findViewById(R.id.delete_note_view);
+        notes = (Notes) getArguments().getSerializable("NOTES");
+        deleteTextView = (TextView) view.findViewById(R.id.delete_note_button);
+        editText = (EditText) view.findViewById(R.id.edit_text_for_content);
+        editText.setEnabled(false);
+        editText.setFocusable(false);
+        editText.setText(notes.getNote());
 
-        textInputLayoutHeader = (TextInputLayout) view.findViewById(R.id.header_input_layout);
-        editTextHeader = (EditText) view.findViewById(R.id.edit_text_for_header);
-
-        textInputLayoutNote = (TextInputLayout) view.findViewById(R.id.note_input_layout);
-        editTextNote = (EditText) view.findViewById(R.id.edit_text_for_content);
-        textViewCreateButton = (TextView) view.findViewById(R.id.save_note_button);
-        textViewCreateButton.setOnClickListener(new View.OnClickListener() {
+        actionBar.setTitle(notes.getHeader());
+        isOpenForEdit = false;
+        deleteTextView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                String header = editTextHeader.getText().toString();
-                if (TextUtils.isEmpty(editTextHeader.getText())) {
-                    textInputLayoutHeader.setError(getString(R.string.err_msg_header));
-                    return;
-                }
-
-                if (TextUtils.isEmpty(editTextNote.getText())) {
-                    textInputLayoutNote.setError(getString(R.string.err_msg_note));
-                    return;
-                }
-
-                String note = editTextNote.getText().toString();
-                Notes notes = new Notes();
-                notes.setNote(note);
-                notes.setHeader(header);
-                saveNewNote(notes);
+                deleteNote(notes);
             }
         });
         return view;
     }
 
-    private void saveNewNote(Notes notes) {
-        mListener.onNoteCreated(notes);
+    private void deleteNote(Notes notes) {
+        mListener.onDeleteNote(notes);
         getFragmentManager().popBackStack();
+    }
+
+    private void editTheContent() {
+        editText.setEnabled(true);
+        editText.setInputType(InputType.TYPE_CLASS_TEXT);
+        editText.setFocusable(true);
+        deleteTextView.setText("DONE");
+        isOpenForEdit = true;
+        editText.setSingleLine(false);
+        editText.setImeOptions(EditorInfo.IME_FLAG_NO_ENTER_ACTION);
+
     }
 
     // TODO: Rename method, update argument and hook method into UI event
@@ -98,8 +92,6 @@ public class CreateNoteFragment extends Fragment {
         if (mListener != null) {
             mListener.onFragmentInteraction(uri);
         }
-        getFragmentManager().popBackStack();
-
     }
 
     @Override
@@ -133,6 +125,6 @@ public class CreateNoteFragment extends Fragment {
         // TODO: Update argument type and name
         void onFragmentInteraction(Uri uri);
 
-        void onNoteCreated(Notes notes);
+        void onDeleteNote(Notes editedNote);
     }
 }

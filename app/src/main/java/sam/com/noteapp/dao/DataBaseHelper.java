@@ -105,4 +105,12 @@ public class DataBaseHelper extends SQLiteOpenHelper {
         }
         return notesArrayList;
     }
+
+    public void deleteNote(int id) {
+
+        SQLiteDatabase sqLiteDatabase = this.getWritableDatabase();
+        sqLiteDatabase.delete(TABLE, ID + " = ?",
+                new String[]{String.valueOf(id)});
+        sqLiteDatabase.close();
+    }
 }

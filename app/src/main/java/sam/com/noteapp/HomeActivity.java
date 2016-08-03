@@ -1,64 +1,85 @@
 package sam.com.noteapp;
 
-import android.app.FragmentTransaction;
+import android.content.DialogInterface;
 import android.net.Uri;
-import android.support.v4.app.Fragment;
+import android.os.Handler;
+import android.support.design.widget.CoordinatorLayout;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.FragmentManager;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.Gravity;
+import android.view.View;
+import android.widget.FrameLayout;
 
 import java.util.List;
 
 import sam.com.noteapp.dao.DataBaseHelper;
 import sam.com.noteapp.fragments.CreateNoteFragment;
+import sam.com.noteapp.fragments.DeleteFragment;
 import sam.com.noteapp.fragments.DetailsFragment;
 import sam.com.noteapp.fragments.HomeFragment;
 import sam.com.noteapp.pojo.NoteList;
 import sam.com.noteapp.pojo.Notes;
 
 public class HomeActivity extends AppCompatActivity implements HomeFragment.OnFragmentInteractionListener,
-        DetailsFragment.OnFragmentInteractionListener, CreateNoteFragment.OnFragmentInteractionListener, FragmentManager.OnBackStackChangedListener {
+        DetailsFragment.OnFragmentInteractionListener, CreateNoteFragment.OnFragmentInteractionListener,
+        FragmentManager.OnBackStackChangedListener, DeleteFragment.OnFragmentInteractionListener {
 
     private static final String TAG = "HomeActivity";
     private Toolbar toolbar;
     private DataBaseHelper dataBaseHelper;
-    HomeFragment homeFragment;
+    private HomeFragment homeFragment;
+    private AlertDialog alert;
+    private CoordinatorLayout coordinatorLayout;
+    private final static String SUCCESS_MSG_FOR_NEW_NOTE = "Your note has been saved successfully !";
+    private final static String SUCCESS_MSG_FOR_UPDATE_NOTE = "Your note has been updated successfully !";
+    private final static String SUCCESS_MSG_FOR_DELETE_NOTE = "Your note has been deleted successfully !";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
+
+        coordinatorLayout = (CoordinatorLayout) findViewById(R.id.coordinator_layout_for_snackbar);
+
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+
         dataBaseHelper = new DataBaseHelper(getApplicationContext());
-        Notes notes = new Notes();
-        notes.setHeader("test");
-        notes.setNote("hi this is test");
-
-        long id = dataBaseHelper.createNote(notes);
-
-        Log.i(TAG, "onCreate: " + id);
-
-        notes = dataBaseHelper.getNote(id);
-        System.out.println("notes = " + notes);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
+
         List<Notes> notesList = dataBaseHelper.getAllTags();
         openHomeFragment(notesList, false);
     }
 
+    private void showSnackbarMessage(String message) {
+        final Snackbar snackbar = Snackbar.make(coordinatorLayout, message, Snackbar.LENGTH_LONG);
+        Handler handler = new Handler();
+        handler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                snackbar.show();
+            }
+        }, 500);
+
+    }
+
     private void openHomeFragment(List<Notes> notesList, boolean reload) {
-        android.support.v4.app.FragmentManager fm = getSupportFragmentManager();
-        android.support.v4.app.FragmentTransaction ft = fm.beginTransaction();
+        android.support.v4.app.FragmentManager supportFragmentManager = getSupportFragmentManager();
+        android.support.v4.app.FragmentTransaction fragmentTransaction = supportFragmentManager.beginTransaction();
+        fragmentTransaction.setCustomAnimations(R.anim.enter_from_right, R.anim.exit_to_left);
         Bundle bundle = new Bundle();
         NoteList listOfNotes = new NoteList();
         listOfNotes.setNotesList(notesList);
         bundle.putSerializable("LIST_OF_NOTES", listOfNotes);
         homeFragment = new HomeFragment();
         homeFragment.setArguments(bundle);
-        ft.add(R.id.fragment, homeFragment, "HomeFragment");
-        ft.commit();
+        fragmentTransaction.add(R.id.fragment, homeFragment, "HomeFragment");
+        fragmentTransaction.commit();
     }
 
     @Override
@@ -67,10 +88,17 @@ public class HomeActivity extends AppCompatActivity implements HomeFragment.OnFr
     }
 
     @Override
+    public void onDeleteNote(Notes note) {
+        deleteNote(note.getId());
+    }
+
+    @Override
     public void onNoteCreated(Notes notes) {
         dataBaseHelper.createNote(notes);
         List<Notes> notesList = dataBaseHelper.getAllTags();
         homeFragment.refresh(notesList);
+        shouldDisplayHomeUp();
+        showSnackbarMessage(SUCCESS_MSG_FOR_NEW_NOTE);
     }
 
     @Override
@@ -78,12 +106,66 @@ public class HomeActivity extends AppCompatActivity implements HomeFragment.OnFr
         dataBaseHelper.updateNote(editedNote);
         List<Notes> notesList = dataBaseHelper.getAllTags();
         homeFragment.refresh(notesList);
+        showSnackbarMessage(SUCCESS_MSG_FOR_UPDATE_NOTE);
     }
 
     @Override
     public void onListItemClick(int position) {
-        Notes notes = dataBaseHelper.getNote(position + 1);
+        Notes notes = dataBaseHelper.getNote(position);
         openDetailsFragment(notes);
+    }
+
+    @Override
+    public void onListItemLongClick(int position) {
+        Notes notes = dataBaseHelper.getNote(position);
+        showPopUpForDelete(notes);
+    }
+
+    private void showPopUpForDelete(final Notes notes) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setMessage(notes.getHeader())
+                .setTitle("Do you want to delete this note ?");
+
+        builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int id) {
+                alert.dismiss();
+                openScreenForNoteDeletion(notes);
+
+            }
+        });
+
+        builder.setNegativeButton("CANCEL", new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int id) {
+                alert.dismiss();
+            }
+        });
+        alert = builder.create();
+        alert.show();
+    }
+
+    private void openScreenForNoteDeletion(Notes notes) {
+        Log.i(TAG, "onListItemClick: open detail fragment");
+        android.support.v4.app.FragmentManager fragmentManager = getSupportFragmentManager();
+        android.support.v4.app.FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+        fragmentTransaction.setCustomAnimations(R.anim.enter_from_right, R.anim.exit_to_left, R.anim.enter_from_left, R.anim.exit_to_right);
+        DeleteFragment deleteFragment = new DeleteFragment();
+        Bundle bundle = new Bundle();
+        bundle.putSerializable("NOTES", notes);
+        deleteFragment.setArguments(bundle);
+        fragmentTransaction.replace(R.id.fragment, deleteFragment);
+        fragmentTransaction.addToBackStack(null);
+        fragmentTransaction.commit();
+
+    }
+
+    private void deleteNote(final int id) {
+
+        dataBaseHelper.deleteNote(id);
+        List<Notes> notesList = dataBaseHelper.getAllTags();
+        homeFragment.refresh(notesList);
+        shouldDisplayHomeUp();
+        showSnackbarMessage(SUCCESS_MSG_FOR_DELETE_NOTE);
+
     }
 
     @Override
@@ -92,9 +174,11 @@ public class HomeActivity extends AppCompatActivity implements HomeFragment.OnFr
 
         android.support.v4.app.FragmentManager fragmentManager = getSupportFragmentManager();
         android.support.v4.app.FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+        fragmentTransaction.setCustomAnimations(R.anim.enter_from_right, R.anim.exit_to_left, R.anim.enter_from_left, R.anim.exit_to_right);
         CreateNoteFragment createNoteFragment = new CreateNoteFragment();
         fragmentTransaction.replace(R.id.fragment, createNoteFragment);
         fragmentTransaction.addToBackStack(null);
+
         fragmentTransaction.commit();
     }
 
@@ -103,6 +187,7 @@ public class HomeActivity extends AppCompatActivity implements HomeFragment.OnFr
 
         android.support.v4.app.FragmentManager fragmentManager = getSupportFragmentManager();
         android.support.v4.app.FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+        fragmentTransaction.setCustomAnimations(R.anim.enter_from_right, R.anim.exit_to_left, R.anim.enter_from_left, R.anim.exit_to_right);
         DetailsFragment detailsFragment = new DetailsFragment();
         Bundle bundle = new Bundle();
         bundle.putSerializable("NOTES", notes);
@@ -128,16 +213,11 @@ public class HomeActivity extends AppCompatActivity implements HomeFragment.OnFr
     }
 
     private void shouldDisplayHomeUp() {
-        //Enable Up button only  if there are entries in the back stack
-        boolean canback = getSupportFragmentManager().getBackStackEntryCount() > 0;
-        Log.i(TAG, "shouldDisplayHomeUp: " + canback);
         getSupportActionBar().setDisplayHomeAsUpEnabled(false);
     }
 
     @Override
     public boolean onSupportNavigateUp() {
-        //This method is called when the up button is pressed. Just the pop back stack
-        Log.i(TAG, "onSupportNavigateUp: called");
         shouldDisplayHomeUp();
         getSupportFragmentManager().popBackStack();
         return true;

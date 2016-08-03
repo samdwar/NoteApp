@@ -9,4 +9,5 @@ import android.view.View;
  */
 public interface OnListItemClickListener {
     public void onClick(View view, int position);
+    public void onLongPressClick(View view, int position);
 }
