@@ -1,19 +1,17 @@
-package sam.com.noteapp.adapters;
+package com.sam.noteapp.adapters;
 
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
-import android.util.SparseBooleanArray;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import java.util.ArrayList;
 import java.util.List;
 
-import sam.com.noteapp.R;
-import sam.com.noteapp.listeners.OnListItemClickListener;
-import sam.com.noteapp.pojo.Notes;
+import com.sam.noteapp.R;
+import com.sam.noteapp.listeners.OnListItemClickListener;
+import com.sam.noteapp.pojo.Notes;
 
 /**
  * Created by sam on 2/8/16.

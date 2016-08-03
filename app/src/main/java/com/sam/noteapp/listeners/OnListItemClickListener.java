@@ -1,7 +1,5 @@
-package sam.com.noteapp.listeners;
+package com.sam.noteapp.listeners;
 
-import android.support.v7.widget.RecyclerView;
-import android.view.MotionEvent;
 import android.view.View;
 
 /**

@@ -1,4 +1,4 @@
-package sam.com.noteapp;
+package com.sam.noteapp;
 
 import org.junit.Test;
 

@@ -1,4 +1,4 @@
-package sam.com.noteapp.constants;
+package com.sam.noteapp.constants;
 
 /**
  * Created by sam on 3/8/16.

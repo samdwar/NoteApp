@@ -1,4 +1,4 @@
-package sam.com.noteapp.dao;
+package com.sam.noteapp.dao;
 
 import android.content.ContentValues;
 import android.content.Context;
@@ -10,7 +10,7 @@ import android.database.sqlite.SQLiteOpenHelper;
 import java.util.ArrayList;
 import java.util.List;
 
-import sam.com.noteapp.pojo.Notes;
+import com.sam.noteapp.pojo.Notes;
 
 /**
  * Created by sam on 3/8/16.

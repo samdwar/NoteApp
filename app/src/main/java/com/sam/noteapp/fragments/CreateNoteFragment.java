@@ -1,7 +1,6 @@
-package sam.com.noteapp.fragments;
+package com.sam.noteapp.fragments;
 
 import android.content.Context;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.TextInputLayout;
 import android.support.v4.app.Fragment;
@@ -9,17 +8,14 @@ import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.TextView;
 
-import org.w3c.dom.Text;
-
-import sam.com.noteapp.R;
-import sam.com.noteapp.pojo.Notes;
+import com.sam.noteapp.R;
+import com.sam.noteapp.pojo.Notes;
 
 public class CreateNoteFragment extends Fragment {
 

@@ -1,36 +1,27 @@
-package sam.com.noteapp.fragments;
+package com.sam.noteapp.fragments;
 
-import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.TextInputLayout;
 import android.support.v4.app.Fragment;
-import android.support.v4.text.TextUtilsCompat;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.text.InputType;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.WindowManager;
-import android.view.inputmethod.EditorInfo;
-import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.TextView;
 
-import sam.com.noteapp.R;
-import sam.com.noteapp.constants.Constant;
-import sam.com.noteapp.pojo.NoteList;
-import sam.com.noteapp.pojo.Notes;
+import com.sam.noteapp.R;
+import com.sam.noteapp.constants.Constant;
+import com.sam.noteapp.pojo.Notes;
 
 /**
  * A simple {@link Fragment} subclass.

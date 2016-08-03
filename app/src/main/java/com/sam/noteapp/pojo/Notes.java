@@ -1,4 +1,4 @@
-package sam.com.noteapp.pojo;
+package com.sam.noteapp.pojo;
 
 import java.io.Serializable;
 

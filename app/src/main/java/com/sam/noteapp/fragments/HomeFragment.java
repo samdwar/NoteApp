@@ -1,7 +1,6 @@
-package sam.com.noteapp.fragments;
+package com.sam.noteapp.fragments;
 
 import android.content.Context;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.ActionBar;
@@ -21,12 +20,12 @@ import android.widget.TextView;
 
 import java.util.List;
 
-import sam.com.noteapp.R;
-import sam.com.noteapp.adapters.HomeListAdapter;
-import sam.com.noteapp.constants.Constant;
-import sam.com.noteapp.listeners.OnListItemClickListener;
-import sam.com.noteapp.pojo.NoteList;
-import sam.com.noteapp.pojo.Notes;
+import com.sam.noteapp.R;
+import com.sam.noteapp.adapters.HomeListAdapter;
+import com.sam.noteapp.constants.Constant;
+import com.sam.noteapp.listeners.OnListItemClickListener;
+import com.sam.noteapp.pojo.NoteList;
+import com.sam.noteapp.pojo.Notes;
 
 public class HomeFragment extends Fragment implements OnListItemClickListener {
     // TODO: Rename parameter arguments, choose names that match

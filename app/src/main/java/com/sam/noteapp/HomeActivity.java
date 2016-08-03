@@ -1,7 +1,6 @@
-package sam.com.noteapp;
+package com.sam.noteapp;
 
 import android.content.DialogInterface;
-import android.net.Uri;
 import android.os.Handler;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.Snackbar;
@@ -10,23 +9,17 @@ import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
-import android.view.Gravity;
-import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.View;
-import android.widget.FrameLayout;
 
 import java.util.List;
 
-import sam.com.noteapp.constants.Constant;
-import sam.com.noteapp.dao.DataBaseHelper;
-import sam.com.noteapp.fragments.CreateNoteFragment;
-import sam.com.noteapp.fragments.DeleteFragment;
-import sam.com.noteapp.fragments.DetailsFragment;
-import sam.com.noteapp.fragments.HomeFragment;
-import sam.com.noteapp.pojo.NoteList;
-import sam.com.noteapp.pojo.Notes;
+import com.sam.noteapp.constants.Constant;
+import com.sam.noteapp.dao.DataBaseHelper;
+import com.sam.noteapp.fragments.CreateNoteFragment;
+import com.sam.noteapp.fragments.DeleteFragment;
+import com.sam.noteapp.fragments.DetailsFragment;
+import com.sam.noteapp.fragments.HomeFragment;
+import com.sam.noteapp.pojo.NoteList;
+import com.sam.noteapp.pojo.Notes;
 
 public class HomeActivity extends AppCompatActivity implements HomeFragment.OnFragmentInteractionListener,
         DetailsFragment.OnFragmentInteractionListener, CreateNoteFragment.OnFragmentInteractionListener,
