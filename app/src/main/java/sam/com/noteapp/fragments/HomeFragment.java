@@ -4,6 +4,7 @@ import android.content.Context;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
@@ -66,9 +67,14 @@ public class HomeFragment extends Fragment implements OnListItemClickListener {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_home, container, false);
         createNoteButton = (TextView) view.findViewById(R.id.create_note_button);
-        Toolbar toolbar = (Toolbar) view.findViewById(R.id.toolbar);
+        Toolbar toolbar = (Toolbar) getActivity().findViewById(R.id.toolbar);
 
         ((AppCompatActivity) getActivity()).setSupportActionBar(toolbar);
+
+        ActionBar actionBar = ((AppCompatActivity)getActivity()).getSupportActionBar();
+        actionBar.setTitle("Notes");
+
+
         notes = (NoteList) getArguments().getSerializable("LIST_OF_NOTES");
         Log.i(TAG, "onCreateView: " + notes);
         recyclerView = (RecyclerView) view.findViewById(R.id.all_notes_list);

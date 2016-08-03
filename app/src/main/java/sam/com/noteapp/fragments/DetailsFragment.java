@@ -4,6 +4,7 @@ import android.content.Context;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.text.InputType;
@@ -44,9 +45,14 @@ public class DetailsFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_details, container, false);
-        final Toolbar toolbar = (Toolbar) view.findViewById(R.id.toolbar);
+        final Toolbar toolbar = (Toolbar) getActivity().findViewById(R.id.toolbar);
 
         ((AppCompatActivity) getActivity()).setSupportActionBar(toolbar);
+        ActionBar actionBar = ((AppCompatActivity) getActivity()).getSupportActionBar();
+
+        actionBar.setDisplayHomeAsUpEnabled(true);
+        actionBar.setHomeButtonEnabled(true);
+        actionBar.setHomeAsUpIndicator(R.drawable.ic_keyboard_arrow_left_black_18dp);
         final View editButtonView = view.findViewById(R.id.edit_note_view);
         notes = (Notes) getArguments().getSerializable("NOTES");
         editTextView = (TextView) view.findViewById(R.id.edit_note_button);
@@ -54,6 +60,8 @@ public class DetailsFragment extends Fragment {
         editText.setEnabled(false);
         editText.setFocusable(false);
         editText.setText(notes.getNote());
+
+        actionBar.setTitle(notes.getHeader());
         isOpenForEdit = false;
         editTextView.setOnClickListener(new View.OnClickListener() {
             @Override

@@ -4,6 +4,10 @@ import android.content.Context;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v7.app.ActionBar;
+import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -29,6 +33,7 @@ public class CreateNoteFragment extends Fragment {
     private EditText editTextHeader;
     private EditText editTextNote;
     private TextView textViewCreateButton;
+    private Toolbar toolbar;
 
     public CreateNoteFragment() {
         // Required empty public constructor
@@ -39,6 +44,16 @@ public class CreateNoteFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_create_note, container, false);
+
+        toolbar = (Toolbar) getActivity().findViewById(R.id.toolbar);
+
+        ActionBar actionBar = ((AppCompatActivity) getActivity()).getSupportActionBar();
+        actionBar.setTitle("Create new note");
+        actionBar.setDisplayHomeAsUpEnabled(true);
+        actionBar.setHomeButtonEnabled(true);
+        actionBar.setHomeAsUpIndicator(R.drawable.ic_keyboard_arrow_left_black_18dp);
+
+
         editTextHeader = (EditText) view.findViewById(R.id.edit_text_for_header);
         editTextNote = (EditText) view.findViewById(R.id.edit_text_for_content);
         textViewCreateButton = (TextView) view.findViewById(R.id.save_note_button);
@@ -66,6 +81,8 @@ public class CreateNoteFragment extends Fragment {
         if (mListener != null) {
             mListener.onFragmentInteraction(uri);
         }
+        getFragmentManager().popBackStack();
+
     }
 
     @Override

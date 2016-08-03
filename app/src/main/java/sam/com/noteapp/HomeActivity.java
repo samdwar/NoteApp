@@ -3,6 +3,7 @@ package sam.com.noteapp;
 import android.app.FragmentTransaction;
 import android.net.Uri;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
@@ -18,7 +19,7 @@ import sam.com.noteapp.pojo.NoteList;
 import sam.com.noteapp.pojo.Notes;
 
 public class HomeActivity extends AppCompatActivity implements HomeFragment.OnFragmentInteractionListener,
-        DetailsFragment.OnFragmentInteractionListener, CreateNoteFragment.OnFragmentInteractionListener {
+        DetailsFragment.OnFragmentInteractionListener, CreateNoteFragment.OnFragmentInteractionListener, FragmentManager.OnBackStackChangedListener {
 
     private static final String TAG = "HomeActivity";
     private Toolbar toolbar;
@@ -118,5 +119,27 @@ public class HomeActivity extends AppCompatActivity implements HomeFragment.OnFr
         } else {
             getFragmentManager().popBackStack();
         }
+        shouldDisplayHomeUp();
+    }
+
+    @Override
+    public void onBackStackChanged() {
+        shouldDisplayHomeUp();
+    }
+
+    private void shouldDisplayHomeUp() {
+        //Enable Up button only  if there are entries in the back stack
+        boolean canback = getSupportFragmentManager().getBackStackEntryCount() > 0;
+        Log.i(TAG, "shouldDisplayHomeUp: " + canback);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(false);
+    }
+
+    @Override
+    public boolean onSupportNavigateUp() {
+        //This method is called when the up button is pressed. Just the pop back stack
+        Log.i(TAG, "onSupportNavigateUp: called");
+        shouldDisplayHomeUp();
+        getSupportFragmentManager().popBackStack();
+        return true;
     }
 }
